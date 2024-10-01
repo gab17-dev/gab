@@ -69,15 +69,15 @@
 
             errorDiv.textContent = ""; 
 
-            // Calculate required grades for passing
-            const requiredMidterm = ((75 * 0.3) - (prelimGrade * 0.2)) / 0.3; 
-            const requiredFinal = ((75 * 0.5) - (prelimGrade * 0.2) - (requiredMidterm * 0.3)) / 0.5;
+            
+            const requiredMidterm = ((prelimGrade * 0.3) + (prelimGrade * 0.2)) / 0.3; 
+            const requiredFinal = ((prelimGrade * 0.5) + (prelimGrade * 0.2) - (requiredMidterm * 0.3)) / 0.5;
 
-            // Dean's Lister requirements
-            const deanListerMidterm = ((90 * 0.3) - (prelimGrade * 0.2)) / 0.3;
-            const deanListerFinal = ((90 * 0.5) - (prelimGrade * 0.2) - (deanListerMidterm * 0.3)) / 0.5;
+           
+            const deanListerMidterm = ((90 * 0.3) + (prelimGrade * 0.2)) / 0.3;
+            const deanListerFinal = ((90 * 0.5) + (prelimGrade * 0.2) - (deanListerMidterm * 0.3)) / 0.5;
 
-            // Determine passing chance
+            
             const passingChance = requiredMidterm <= 100 && requiredFinal <= 100 ? "You have a chance to pass!" : "It is difficult to pass.";
 
             // Display results
