@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Calculator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+        .container {
+            width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        .result {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Grade Calculator</h2>
+        <div id="error" class="error"></div>
+        <form id="grade-form">
+            <label for="prelim_grade">Prelim Grade:</label>
+            <input type="number" id="prelim_grade" name="prelim_grade" required>
+            <button type="submit">Calculate</button>
+        </form>
+
+        <div id="result" class="result">
+            </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('grade-form');
+        const resultDiv = document.getElementById('result');
+        const errorDiv = document.getElementById('error');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+
+            const prelimGrade = parseFloat(document.getElementById('prelim_grade').value);
+
+            if (isNaN(prelimGrade) || prelimGrade < 0 || prelimGrade > 100) {
+                errorDiv.textContent = "Prelim grade must be a number between 0 and 100.";
+                return;
+            }
+
+            errorDiv.textContent = ""; 
+
+            try {
+                const response = await fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ prelim_grade: prelimGrade })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <h3>Results:</h3>
+                        <p>Prelim Grade: ${data.prelim_grade}</p>
+                        <p>Required Midterm Grade: ${data.required_midterm.toFixed(2)}</p>
+                        <p>Required Final Grade: ${data.required_final.toFixed(2)}</p>
+                        <p>${data.passing_chance}</p>
+                        <p>Dean's Lister Required Midterm: ${data.dean_lister_midterm.toFixed(2)}</p>
+                        <p>Dean's Lister Required Final: ${data.dean_lister_final.toFixed(2)}</p>
+                    `;
+                } else {
+                    errorDiv.textContent = "An error occurred. Please try again.";
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                errorDiv.textContent = "An error occurred. Please try again.";
+            }
+        });
+
+        // You can add this script as a separate file (e.g., calculate.py)
+        // and import it into your HTML using <script src="calculate.py"></script>
+        // or copy the content here.
+        // This script will be executed on the client-side.
+        // Make sure to change the script path if it's in a different location.
+        <script src="calculate.py"></script>
+    </script>
+</body>
+</html>
