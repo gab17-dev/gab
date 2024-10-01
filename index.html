@@ -57,7 +57,7 @@
         const resultDiv = document.getElementById('result');
         const errorDiv = document.getElementById('error');
 
-        form.addEventListener('submit', async (event) => {
+        form.addEventListener('submit', (event) => {
             event.preventDefault(); 
 
             const prelimGrade = parseFloat(document.getElementById('prelim_grade').value);
@@ -69,41 +69,28 @@
 
             errorDiv.textContent = ""; 
 
-            try {
-                const response = await fetch('/calculate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ prelim_grade: prelimGrade })
-                });
+            // Calculate required grades
+            const requiredMidterm = (75 - (prelimGrade * 0.2)) / 0.3;
+            const requiredFinal = (75 - (prelimGrade * 0.2) - (requiredMidterm * 0.3)) / 0.5;
 
-                if (response.ok) {
-                    const data = await response.json();
-                    resultDiv.innerHTML = `
-                        <h3>Results:</h3>
-                        <p>Prelim Grade: ${data.prelim_grade}</p>
-                        <p>Required Midterm Grade: ${data.required_midterm.toFixed(2)}</p>
-                        <p>Required Final Grade: ${data.required_final.toFixed(2)}</p>
-                        <p>${data.passing_chance}</p>
-                        <p>Dean's Lister Required Midterm: ${data.dean_lister_midterm.toFixed(2)}</p>
-                        <p>Dean's Lister Required Final: ${data.dean_lister_final.toFixed(2)}</p>
-                    `;
-                } else {
-                    errorDiv.textContent = "An error occurred. Please try again.";
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                errorDiv.textContent = "An error occurred. Please try again.";
-            }
+            // Dean's Lister requirements
+            const deanListerMidterm = (90 - (prelimGrade * 0.2)) / 0.3;
+            const deanListerFinal = (90 - (prelimGrade * 0.2) - (deanListerMidterm * 0.3)) / 0.5;
+
+            // Determine passing chance
+            const passingChance = requiredMidterm <= 100 && requiredFinal <= 100 ? "You have a chance to pass!" : "It is difficult to pass.";
+
+            // Display results
+            resultDiv.innerHTML = `
+                <h3>Results:</h3>
+                <p>Prelim Grade: ${prelimGrade}</p>
+                <p>Required Midterm Grade: ${requiredMidterm.toFixed(2)}</p>
+                <p>Required Final Grade: ${requiredFinal.toFixed(2)}</p>
+                <p>${passingChance}</p>
+                <p>Dean's Lister Required Midterm: ${deanListerMidterm.toFixed(2)}</p>
+                <p>Dean's Lister Required Final: ${deanListerFinal.toFixed(2)}</p>
+            `;
         });
-
-        // You can add this script as a separate file (e.g., calculate.py)
-        // and import it into your HTML using <script src="calculate.py"></script>
-        // or copy the content here.
-        // This script will be executed on the client-side.
-        // Make sure to change the script path if it's in a different location.
-        <script src="calculate.py"></script>
     </script>
 </body>
 </html>
