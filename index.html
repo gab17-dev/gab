@@ -73,10 +73,7 @@
             const requiredMidterm = (75 - (0.20 * prelimGrade) - (0.50 * 75)) / 0.30;
             const requiredFinal = (75 - (0.20 * prelimGrade) - (0.30 * 75)) / 0.50; 
 
-            // Dean's Lister requirements
-            const deanListerMidterm = ((90 * 0.3) - (prelimGrade * 0.2)) / 0.3;
-            const deanListerFinal = ((90 * 0.5) - (prelimGrade * 0.2) - (deanListerMidterm * 0.3)) / 0.5;
-
+            
             // Determine passing chance
             const passingChance = requiredMidterm <= 100 && requiredFinal <= 100 ? "You have a chance to pass!" : "It is difficult to pass.";
 
@@ -88,9 +85,6 @@
                 <p>Required Final Grade: ${requiredFinal.toFixed(2)}</p>
                 <p>${passingChance}</p>
 
-                <h3>Dean's Lister Requirements</h3>
-                <p>Required Midterm Grade: ${deanListerMidterm.toFixed(2)}</p> 
-                <p>Required Final Grade: ${deanListerFinal.toFixed(2)}</p> 
             `;
         });
     </script>
